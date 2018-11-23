@@ -1,0 +1,7 @@
+# zs-links.R
+doresit possibly / tryCatch pro get.kat.links 
+
+list.zs <- map(kat.url, ~future(get.zs.links(.x))) # OK
+list.zs <- map(list.zs, value)
+Error in open.connection(x, "rb") : 
+  Timeout was reached: Operation timed out after 10015 milliseconds with 0 out of 0 bytes received
