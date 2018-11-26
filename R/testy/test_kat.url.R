@@ -19,4 +19,12 @@ test_that('ok url bez NA', {
 })
 
 context('future p.get.kat.url')
-# doplnit
+oblasti <- c("https://gov.cz/obcan/zivotni-situace/bydleni", "https://gov.cz/obcan/zivotni-situace/bydle")
+out <- map(oblasti, ~future(p.get.kat.url(.x)))
+out <- map(out, ~value(.x))
+out <- unlist(out)
+test_that("get correct results", {
+  expect_length(out, 7)
+  expect_equal(is.na(out), c(F, F, F, F, F, F, T))
+})
+
