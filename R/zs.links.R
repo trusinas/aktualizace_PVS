@@ -1,45 +1,37 @@
 library(rvest)
 library(tidyverse)
-library(future)
 
 # odkazy na jednotlivé oblasti
-oblasti <- "https://gov.cz/obcan/zivotni-situace"
-oblasti <- oblasti %>% 
-  read_html() %>% 
-  html_nodes(xpath = "/html/body/div/div/div[3]/div/div[2]/div[1]/div/ul") %>% 
-  html_nodes("a") %>% 
-  html_attr("href")
-url.oblasti <- paste0("https://gov.cz", oblasti)
+get.oblasti.url <- function() {
+  url <- "https://gov.cz/obcan/zivotni-situace"
+  oblasti <- url %>%
+    read_html() %>% 
+    html_nodes(xpath = "/html/body/div/div/div[3]/div/div[2]/div[1]/div/ul") %>% 
+    html_nodes("a") %>% 
+    html_attr("href")
+  oblasti <- paste0("https://gov.cz", oblasti)
+  return(oblasti)
+}
 
 # odkazy na kategorie
-get.kat.links <- function(link) {
-  link %>%
+get.kat.url <- function(link) {
+  url <- link %>%
     read_html() %>% 
     html_nodes(xpath = "/html/body/div/div/div[3]/div/div[2]/div[2]") %>%
     html_nodes("a") %>% 
     html_attr("href")
+  url <- paste0("https://gov.cz", url)
+  return(url)
 }
-plan(multiprocess)
-# kat.url <- map(url.oblasti, possibly(get.kat.links, NA)) # 1.762263 mins
-kat.url <- map(url.oblasti, ~future(get.kat.links(.x))) # paralel 2.708643 secs
-kat.url <- map(kat.url, value)
-kat.url <- unlist(kat.url) # 127 (všechny unikátní)
-kat.url <- paste0("https://gov.cz", kat.url)
+
+p.get.kat.url <- possibly(get.kat.url, NA)
 
 # odkazy na ŽS
-get.zs.links <- function(link) {
-  link %>%
+get.zs.url <- function(link) {
+  url <- link %>%
     read_html() %>% 
     html_nodes(xpath = "/html/body/div/div/div[3]/div/div[2]/div[2]/div") %>%
     html_nodes("a") %>% 
     html_attr("href")
+  return(url)
 }
-list.zs <- map(kat.url, possibly(get.zs.links, NA))
-url <- unlist(list.zs)
-print(paste("chybi stazenych ZS", table(is.na(url)) %>% 
-  map("TRUE")))
-# uložit nepročištěné + s oblastí a podoblastí (Bydlení - Hasiči)
-# lze sestavit i z url x v př. duplicitních ne
-# ŽS stahovat z neduplicitních
-url <- paste0("https://gov.cz", url, "?uplny=") # dosáhnu jednotné struktury (vždy 24 bodů)
-write_rds(url, "output/zs.url.rds")

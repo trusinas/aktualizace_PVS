@@ -1,3 +1,5 @@
+p.get.kat.url - místo possibly zkusit jako tryCatch, zda nebude rychlejší
+
 # zs-links.R
 doresit possibly / tryCatch pro get.kat.links 
 
