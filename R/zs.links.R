@@ -33,5 +33,9 @@ get.zs.url <- function(link) {
     html_nodes(xpath = "/html/body/div/div/div[3]/div/div[2]/div[2]/div") %>%
     html_nodes("a") %>% 
     html_attr("href")
+  # url <- paste0("https://gov.cz", url)
+  url <- paste0("https://gov.cz", url, "?uplny=")
   return(url)
 }
+
+p.get.zs.url <- possibly(get.zs.url, NA)
