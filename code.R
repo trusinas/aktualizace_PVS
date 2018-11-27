@@ -2,6 +2,7 @@ library(tidyverse)
 library(rvest)
 library(future)
 source("R/zs.links.R")
+source("R/zs.data.R")
 
 # oblasti
 oblasti <- get.oblasti.url()
@@ -24,29 +25,17 @@ print(paste("pocet NA v ZS:", table(is.na(zs.url))[2]))
 
 write_rds(zs.url, "output/zs.url.rds")
 
-
-# k opravě ------------------------------------------------------------------
-
-
 # import stažených ŽS
-url <- readRDS("zs.url.rds")
+url <- read_rds("output/zs.url.rds")
 url <- unique(url) # 548 = 105 duplicitních (ve více oblastech)
-# url <- url[1:20] pro test
 
+zs.data <- map(url, ~future(p.get.all(.x)))
+zs.data <- map(zs.data, ~value(.x))
+if (table(is.na(zs.data))[[1]] == length(zs.data)) {
+  zs.data <- bind_rows(zs.data)
+  write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
+  print("Stazeni probehlo v poradu.")
+} else {
+  print("Je nutne rucni zpracovani stazenych dat (NA)")
+}
 
-
-# var. s listem + uložit
-# data.zs <- map(url, safely(get.df))
-pboptions(type = "txt")
-data.zs <- pblapply(url, safely(get.df))
-data.zs <- data.zs %>% transpose()
-is_ok <- data.zs$error %>% map_lgl(is_null)
-chybi_zs <- map(data.zs$result, nrow)
-chybi_zs <- unlist(chybi_zs)
-table(is_ok) # kolik správně stažených
-table(chybi_zs) # kolik špatně stažených
-# url[which(is_ok == F)] # kontrola url s chybou
-# saveRDS(data.zs$result, "zs.data.rds")
-# saveRDS(data.zs$error, "errors.rds")
-data <- bind_rows(data.zs$result)
-write_tsv(data, paste0("zs_", Sys.Date(), ".tsv"))

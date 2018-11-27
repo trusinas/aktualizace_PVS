@@ -4,8 +4,8 @@ kontrola url oproti urovni o jedna vyse (kat.url oproti oblastem atd.)
 
 !! stazene ZS zkusit pridadit k agendam dle hl.pp
 
-!! opravit zs.data
-! testy k zs.data
+! testy k zs.data - error pro jednu z funkci get.*
+! opravit ID Záznamu
 
-! opravit stahovani z zakonyprolidi
+!! opravit stahovani z zakonyprolidi
 ! testy k stahovani z zakonyprolidi

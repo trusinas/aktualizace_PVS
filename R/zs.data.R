@@ -9,52 +9,52 @@ get.nazev <- function(html) {
     html_text()
 }
 get.gestor <- function(html) {
-  gestor <- html %>%  # ok
+  gestor <- html %>%
     html_node("col-lg-4 order-lg-2, p") %>% 
     html_text()
 }  
 get.id <- function(html) {
-  id <- html %>% # ok
+  id <- html %>%
     html_node("div.mb-1") %>%
     html_text() %>% 
-    str_remove("ID Záznamu") %>% 
-    str_remove_all("\\s+")
+    # str_remove("ID Záznamu") %>% 
+    str_squish() %>% 
+    str_remove("ID\\s+Záznamu\\s+")
 }
 get.info <- function(html) {
-  info <- html %>%  # ok
+  info <- html %>%
     html_node(".dropdown__content") %>% 
     html_text() %>% 
-    str_replace_all("\\s+", " ") %>% 
-    str_trim()
+    str_squish()
 }
 get.zakon <- function(html) {
-  zakon <- html %>%  # ok
-    html_node(".dropdown__content") %>% 
-    html_text() %>% 
-    str_replace_all("\\s+", " ") %>% 
-    str_trim()
+  zakon <- html %>%
+    html_nodes(".dropdown__content") %>% 
+    .[14] %>% 
+    html_text() %>%
+    str_extract("\\d{1,3}/\\d{4}")
 }
 get.zpracovano <- function(html) {
-  zpracovano <- html %>%  # ok
+  zpracovano <- html %>%
     html_nodes("div.mb-1") %>% 
     .[2] %>% 
     html_text() %>% 
     str_remove("Zpracováno k datu") %>% 
-    str_remove_all("\\s+") %>% 
+    str_squish() %>% 
     dmy() # pokud chybí, gestor nezadal
 }
 get.aktualizace <- function(html) {
-  aktualizace <- html %>%  # ok
+  aktualizace <- html %>%
     html_nodes("div.mb-1") %>% 
     .[3] %>% 
     html_text() %>% 
     str_remove("Poslední aktualizace") %>% 
-    str_remove_all("\\s+") %>% 
+    str_squish() %>% 
     dmy()
 }
 
 # stažení údajů
-get.df <- function(url) {
+get.all <- function(url) {
   html <- url %>%
     read_html()
   nazev <- get.nazev(html)
@@ -66,3 +66,4 @@ get.df <- function(url) {
   aktualizace <- get.aktualizace(html)
   combine.data <- tibble(nazev, gestor, id, info, zakon, zpracovano, aktualizace)
 }
+p.get.all <- possibly(get.all, NA)
