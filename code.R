@@ -36,6 +36,7 @@ if (table(is.na(zs.data))[[1]] == length(zs.data)) {
   write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
   print("Stazeni probehlo v poradu.")
 } else {
+  write_rds(zs.data, paste0("output/zs_", Sys.Date(), ".rds"))
   print("Je nutne rucni zpracovani stazenych dat (NA)")
 }
 
