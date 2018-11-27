@@ -1,3 +1,11 @@
 p.get.kat.url a p.get.zs.url - misto possibly zkusit jako tryCatch, zda nebude rychlejsi
 
 kontrola url oproti urovni o jedna vyse (kat.url oproti oblastem atd.)
+
+!! stazene ZS zkusit pridadit k agendam dle hl.pp
+
+!! opravit zs.data
+! testy k zs.data
+
+! opravit stahovani z zakonyprolidi
+! testy k stahovani z zakonyprolidi
