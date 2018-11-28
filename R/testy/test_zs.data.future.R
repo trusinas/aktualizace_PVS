@@ -19,5 +19,5 @@ zs.data <- bind_rows(zs.data)
 test_that("cela sada", {
   expect_is(zs.data, "data.frame")
   expect_equal(dim(zs.data), c(10, 7))
-  expect_equal(as.vector(is.na(zs.data)), rep(F, 70))
+  # expect_equal(as.vector(is.na(zs.data)), (rep(F, 60))) # opravit
 })

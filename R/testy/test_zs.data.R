@@ -55,5 +55,5 @@ test_that("cela sada", {
 context("p.get.all")
 out <- p.get.all("https://gov.cz/obcan/zivotni-situace/bydleni/katastr-nemovitosti/poskyto")
 test_that("wrong url", {
-  expect_equal(out, NA)
+  expect_equal(unlist(out, use.names = F), rep(NA, 7))
 })

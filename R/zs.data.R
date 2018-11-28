@@ -66,4 +66,5 @@ get.all <- function(url) {
   aktualizace <- get.aktualizace(html)
   combine.data <- tibble(nazev, gestor, id, info, zakon, zpracovano, aktualizace)
 }
-p.get.all <- possibly(get.all, NA)
+p.get.all <- possibly(get.all, data.frame(nazev = NA, gestor = NA, id = NA, info = NA, zakon = NA,
+                      zpracovano = NA, aktualizace = NA))
