@@ -31,12 +31,6 @@ url <- unique(url) # 548 = 105 duplicitních (ve více oblastech)
 
 zs.data <- map(url, ~future(p.get.all(.x)))
 zs.data <- map(zs.data, ~value(.x))
-if (table(is.na(zs.data))[[1]] == length(zs.data)) {
-  zs.data <- bind_rows(zs.data)
-  write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
-  print("Stazeni probehlo v poradu.")
-} else {
-  write_rds(zs.data, paste0("output/zs_", Sys.Date(), ".rds"))
-  print("Je nutne rucni zpracovani stazenych dat (NA)")
-}
+zs.data <- bind_rows(zs.data)
+write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
 
