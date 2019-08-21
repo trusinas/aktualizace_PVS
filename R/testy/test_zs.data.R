@@ -8,12 +8,6 @@ test_that("nazev", {
   expect_equal(out, "Postup občana, u kterého vznikl požár (nebyl-li požár likvidován jednotkou požární ochrany)")
 })
 
-context("get.gestor")
-out <- get.gestor(html)
-test_that("gestor", {
-  expect_equal(out, "Ministerstvo vnitra")
-})
-
 context("get.id")
 out <- get.id(html)
 test_that("ID", {
@@ -48,12 +42,13 @@ context("get.all")
 out <- get.all(url)
 test_that("cela sada", {
   expect_is(out, "data.frame")
-  expect_equal(dim(out), c(1, 7))
-  expect_equal(as.vector(is.na(out)), rep(F, 7))
+  expect_equal(dim(out), c(1, 6))
+  expect_equal(as.vector(is.na(out)), rep(F, 6))
 })
 
 context("p.get.all")
 out <- p.get.all("https://gov.cz/obcan/zivotni-situace/bydleni/katastr-nemovitosti/poskyto")
 test_that("wrong url", {
-  expect_equal(out, NA)
+  expect_equal(out, data.frame(nazev = NA, id = NA, info = NA, zakon = NA, zpracovano = NA, 
+                         aktualizace = NA))
 })

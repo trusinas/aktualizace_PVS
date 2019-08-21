@@ -13,7 +13,7 @@ context('p.get.zs.url')
 test_that('wrong url = NA', {
   expect_equal(p.get.kat.url("https://gov.cz/obcan/zivotni-situace/bydle"), NA)
 })
-out <- p.get.kat.url("https://gov.cz/obcan/zivotni-situace/bydleni/hasici")
+out <- p.get.zs.url("https://gov.cz/obcan/zivotni-situace/bydleni/hasici")
 test_that('ok url bez NA', {
   expect_equal(is.na(out), c(F, F, F))
 })
