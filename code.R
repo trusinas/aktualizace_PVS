@@ -2,7 +2,7 @@ library(tidyverse)
 library(rvest)
 library(future)
 source("R/zs.links.R")
-source("R/zs.data.R") #TODO Opravit na nový design systém
+source("R/zs.data.R")
 
 # oblasti
 oblasti <- c("https://gov.cz/obcan/zivotni-situace", "https://gov.cz/podnikani/zivotni-situace") %>% 
@@ -33,7 +33,7 @@ write_rds(zs.url, paste0("output/zs.url_", Sys.Date(), ".rds"))
 url <- read.zs.url()
 url <- unique(url) # 548 = 105 duplicitních (ve více oblastech)
 
-zs.data <- map(url, ~future(p.get.all(.x))) #TODO Opravit na nový design systém
+zs.data <- map(url, ~future(p.get.all(.x)))
 zs.data <- map(zs.data, ~value(.x))
 zs.data <- bind_rows(zs.data)
 write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
