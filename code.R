@@ -13,12 +13,25 @@ oblasti <- c("https://gov.cz/obcan/zivotni-situace", "https://gov.cz/podnikani/z
 # podoblasti
 plan(multiprocess)
 kat.url <- future_map(oblasti, p.get.kat.url, .progress = T)
+znovu <- oblasti[which(is.na(kat.url))]
+n <- 0 # 3x zkusit stáhnout NA znovu
+while(length(znovu) > 0 & n < 3) {
+  kat.url[which(is.na(kat.url))] <- future_map(znovu, p.get.kat.url, .progress = T)
+  znovu <- oblasti[which(is.na(kat.url))]
+  n <- n + 1
+}
 kat.url <- unlist(kat.url)
 
 # ŽS
 zs.list <- future_map(kat.url, p.get.zs.url, .progress = T)
+znovu <- kat.url[which(is.na(zs.list))]
+n <- 0 # 3x zkusit stáhnout NA znovu
+while(length(znovu) > 0 & n < 3) {
+  zs.list[which(is.na(zs.list))] <- future_map(znovu, p.get.zs.url, .progress = T)
+  znovu <- kat.url[which(is.na(zs.list))]
+  n <- n + 1
+}
 zs.url <- unlist(zs.list)
-# TODO kontrola kat.url oproti oblasti a zs.url oproti kat.url
 
 # uložit nepročištěné + s oblastí a podoblastí (Bydlení - Hasiči)
 # lze sestavit i z url x v př. duplicitních ne
