@@ -1,6 +1,7 @@
 library(tidyverse)
 library(rvest)
 library(future)
+library(furrr)
 source("R/zs.links.R")
 source("R/zs.data.R")
 
@@ -11,13 +12,11 @@ oblasti <- c("https://gov.cz/obcan/zivotni-situace", "https://gov.cz/podnikani/z
 
 # podoblasti
 plan(multiprocess)
-kat.url <- map(oblasti, ~future(p.get.kat.url(.x)))
-kat.url <- map(kat.url, ~value(.x))
+kat.url <- future_map(oblasti, p.get.kat.url, .progress = T)
 kat.url <- unlist(kat.url)
 
 # ŽS
-zs.list <- map(kat.url, ~future(p.get.zs.url(.x)))
-zs.list <- map(zs.list, ~value(.x))
+zs.list <- future_map(kat.url, p.get.zs.url, .progress = T)
 zs.url <- unlist(zs.list)
 # TODO kontrola kat.url oproti oblasti a zs.url oproti kat.url
 
