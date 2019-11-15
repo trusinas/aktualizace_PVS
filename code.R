@@ -36,8 +36,8 @@ zs.url <- unlist(zs.list)
 # uložit nepročištěné + s oblastí a podoblastí (Bydlení - Hasiči)
 # lze sestavit i z url x v př. duplicitních ne
 # ŽS stahovat z neduplicitních
-print(paste("pocet NA v kat. ZS:", table(is.na(kat.url))[2])) #TODO předělat
-print(paste("pocet NA v ZS:", table(is.na(zs.url))[2])) #TODO předělat
+print(paste("pocet NA v kat. ZS:", kat.url %>% as_tibble %>% filter(is.na(value)) %>% nrow()))
+print(paste("pocet NA v ZS:", zs.url %>% as_tibble %>% filter(is.na(value)) %>% nrow()))
 
 write_rds(zs.url, paste0("output/zs.url_", Sys.Date(), ".rds"))
 
@@ -45,8 +45,6 @@ write_rds(zs.url, paste0("output/zs.url_", Sys.Date(), ".rds"))
 url <- read.zs.url()
 url <- unique(url) # 548 = 105 duplicitních (ve více oblastech)
 
-zs.data <- map(url, ~future(p.get.all(.x)))
-zs.data <- map(zs.data, ~value(.x))
+zs.data <- future_map(url, p.get.all, .progress = T)
 zs.data <- bind_rows(zs.data)
 write_tsv(zs.data, paste0("output/zs_", Sys.Date(), ".tsv"))
-
